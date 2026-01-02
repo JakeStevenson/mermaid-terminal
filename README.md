@@ -14,6 +14,7 @@ This skill is powered by [mermaid-ascii](https://github.com/AlexanderGrooff/merm
 
 Copy the `mermaid-terminal` directory to your Claude Code skills location:
 
+**Linux/macOS:**
 ```bash
 cp -r mermaid-terminal ~/.claude/skills/
 ```
@@ -22,6 +23,11 @@ Or symlink it:
 
 ```bash
 ln -s "$(pwd)/mermaid-terminal" ~/.claude/skills/mermaid-terminal
+```
+
+**Windows (PowerShell):**
+```powershell
+Copy-Item -Recurse mermaid-terminal "$env:USERPROFILE\.claude\skills\"
 ```
 
 The skill will automatically install the `mermaid-ascii` binary on first use if not already present.
@@ -52,8 +58,12 @@ For complex systems, the skill guides Claude to split into multiple simple diagr
 
 ## Requirements
 
+**Linux/macOS:**
 - Bash shell
 - curl (for downloading mermaid-ascii if not installed)
+
+**Windows:**
+- PowerShell 5.1+ (included in Windows 10/11)
 
 ## License
 

@@ -7,6 +7,16 @@ description: Renders simple Mermaid diagrams as ASCII art in the terminal. Use t
 
 Render Mermaid diagrams as Unicode ASCII art directly in the terminal.
 
+## Platform Support
+
+This skill works on **Linux**, **macOS**, and **Windows**. Check the `Platform` value in your environment context to determine which scripts to use:
+
+| Platform | Shell | Scripts |
+|----------|-------|---------|
+| `linux` | Bash | `scripts/*.sh` |
+| `darwin` | Bash | `scripts/*.sh` |
+| `win32` | PowerShell | `scripts/*.ps1` |
+
 ## IMPORTANT: Keep Diagrams Simple
 
 The mermaid-ascii renderer has limitations. Complex diagrams will fail to render. Follow these strict constraints:
@@ -55,7 +65,9 @@ Trigger phrases: "how does X work", "walk me through", "explain the flow", "show
 ## Rendering a Diagram
 
 1. Write mermaid syntax to a temp file
-2. Run the render script
+2. Run the render script for your platform
+
+### Linux/macOS (Bash)
 
 ```bash
 # Write diagram to file
@@ -73,6 +85,26 @@ Or pipe directly:
 
 ```bash
 echo 'graph LR; A-->B-->C' | bash scripts/render_mermaid.sh -
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Write diagram to file
+@'
+graph LR
+    A[Start] --> B[Process]
+    B --> C[End]
+'@ | Out-File -FilePath "$env:TEMP\diagram.mermaid" -Encoding UTF8
+
+# Render it
+powershell scripts/render_mermaid.ps1 "$env:TEMP\diagram.mermaid"
+```
+
+Or pipe directly:
+
+```powershell
+'graph LR; A-->B-->C' | powershell scripts/render_mermaid.ps1 -
 ```
 
 ## Mermaid Syntax Reference
@@ -125,6 +157,7 @@ Arrow types:
 
 ### API Request Flow
 
+**Linux/macOS:**
 ```bash
 cat > /tmp/api.mermaid << 'EOF'
 sequenceDiagram
@@ -141,8 +174,26 @@ EOF
 bash scripts/render_mermaid.sh /tmp/api.mermaid
 ```
 
+**Windows:**
+```powershell
+@'
+sequenceDiagram
+    participant U as User
+    participant A as API
+    participant DB as Database
+
+    U->>A: POST /users
+    A->>DB: INSERT user
+    DB-->>A: user_id
+    A-->>U: 201 Created
+'@ | Out-File "$env:TEMP\api.mermaid" -Encoding UTF8
+
+powershell scripts/render_mermaid.ps1 "$env:TEMP\api.mermaid"
+```
+
 ### Git Workflow
 
+**Linux/macOS:**
 ```bash
 cat > /tmp/git.mermaid << 'EOF'
 graph LR
@@ -157,8 +208,24 @@ EOF
 bash scripts/render_mermaid.sh /tmp/git.mermaid
 ```
 
+**Windows:**
+```powershell
+@'
+graph LR
+    A[feature branch] --> B[open PR]
+    B --> C{review}
+    C -->|approved| D[merge]
+    C -->|changes requested| E[update]
+    E --> C
+    D --> F[deploy]
+'@ | Out-File "$env:TEMP\git.mermaid" -Encoding UTF8
+
+powershell scripts/render_mermaid.ps1 "$env:TEMP\git.mermaid"
+```
+
 ### CI/CD Pipeline
 
+**Linux/macOS:**
 ```bash
 cat > /tmp/cicd.mermaid << 'EOF'
 graph LR
@@ -176,6 +243,24 @@ EOF
 bash scripts/render_mermaid.sh /tmp/cicd.mermaid
 ```
 
+**Windows:**
+```powershell
+@'
+graph LR
+    A[Push] --> B[Build]
+    B --> C[Test]
+    C --> D{Pass?}
+    D -->|Yes| E[Deploy Staging]
+    D -->|No| F[Notify]
+    E --> G[Integration Tests]
+    G --> H{Pass?}
+    H -->|Yes| I[Deploy Prod]
+    H -->|No| F
+'@ | Out-File "$env:TEMP\cicd.mermaid" -Encoding UTF8
+
+powershell scripts/render_mermaid.ps1 "$env:TEMP\cicd.mermaid"
+```
+
 ## Automatic Width Adjustment
 
 The renderer automatically detects your terminal width and adjusts spacing to fit. It:
@@ -188,6 +273,7 @@ This means diagrams render well across different terminal sizes and zoom levels 
 
 ## Render Options
 
+**Linux/macOS:**
 ```bash
 # Override auto-spacing with manual values
 bash scripts/render_mermaid.sh diagram.mermaid -x 8 -y 3
@@ -197,4 +283,16 @@ bash scripts/render_mermaid.sh diagram.mermaid -p 2
 
 # Pure ASCII (no Unicode)
 bash scripts/render_mermaid.sh diagram.mermaid --ascii
+```
+
+**Windows:**
+```powershell
+# Override auto-spacing with manual values
+powershell scripts/render_mermaid.ps1 diagram.mermaid -x 8 -y 3
+
+# More padding in boxes
+powershell scripts/render_mermaid.ps1 diagram.mermaid -p 2
+
+# Pure ASCII (no Unicode)
+powershell scripts/render_mermaid.ps1 diagram.mermaid -ascii
 ```
