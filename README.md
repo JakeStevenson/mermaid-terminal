@@ -6,6 +6,10 @@ A Claude Code skill that renders Mermaid diagrams as ASCII art directly in the t
 
 This skill enables Claude Code to visualize diagrams when explaining processes, workflows, architectures, and sequences. Instead of describing relationships in text, Claude can render actual diagrams that display in your terminal.
 
+## Credits
+
+This skill is powered by [mermaid-ascii](https://github.com/AlexanderGrooff/mermaid-ascii) by Alexander Grooff, a tool that converts Mermaid diagram syntax into ASCII art.
+
 ## Installation
 
 Copy the `mermaid-terminal` directory to your Claude Code skills location:
@@ -20,7 +24,7 @@ Or symlink it:
 ln -s "$(pwd)/mermaid-terminal" ~/.claude/skills/mermaid-terminal
 ```
 
-The skill will automatically install the `mermaid-ascii` npm package on first use if not already present.
+The skill will automatically install the `mermaid-ascii` binary on first use if not already present.
 
 ## What It Does
 
@@ -48,8 +52,8 @@ For complex systems, the skill guides Claude to split into multiple simple diagr
 
 ## Requirements
 
-- Node.js and npm (for mermaid-ascii)
 - Bash shell
+- curl (for downloading mermaid-ascii if not installed)
 
 ## License
 
